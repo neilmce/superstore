@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
 
-import java.util.Objects;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JLProduct {
   private final String productId;
@@ -37,37 +35,5 @@ public class JLProduct {
 
   public JLPrice getPrice() {
     return price;
-  }
-
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  public static class Builder {
-    private String id;
-    private String title;
-    public Builder withProductId(String id) {
-      this.id = id;
-      return this;
-    }
-
-    public Builder withTitle(String title) {
-      this.title = title;
-      return this;
-    }
-
-    public Builder withColorSwatches() {
-      return this;
-    }
-
-    public Builder withPrice() {
-      return this;
-    }
-
-    public JLProduct build() {
-      Objects.requireNonNull(id);
-      Objects.requireNonNull(title);
-      return new JLProduct(id, title, null, List.empty());
-    }
   }
 }

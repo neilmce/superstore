@@ -1,33 +1,78 @@
 package com.example.jl;
 
+import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
 import com.example.jl.remote.model.JLProduct;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import io.vavr.collection.List;
+import io.vavr.jackson.datatype.VavrModule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ProductPresentationServiceTest {
-  private final ProductPresentationService presentationService = new ProductPresentationService();
+  private final ProductPresentationService presentationService = new ProductPresentationService(new RgbColorService());
 
-  private final JLProduct testProduct = JLProduct.builder()
-                                                   .withProductId("id")
-                                                   .withTitle("title")
-                                                   .withColorSwatches()
-                                                   .withPrice()
-                                                 .build();
+  private final ObjectReader objectReader = new ObjectMapper()
+                                                  .registerModule(new VavrModule())
+                                                  .reader()
+                                                  .forType(JLProduct.class);
+
+  private JLProduct testProduct;
+
+  @BeforeEach void initTestData() throws JsonProcessingException {
+    testProduct = objectReader.readValue("""
+    {
+      "productId": "5331675",
+      "type": "product",
+      "title": "Girls' Floral Print Jersey Dress, Blue",
+      "price": {
+        "was": "9.00",
+        "then1": "",
+        "then2": "",
+        "now": "6.00",
+        "uom": "",
+        "currency": "GBP"
+      },
+      "image": "//005121982?",
+      "colorSwatches": [
+        {
+          "color": "Sky blue",
+          "basicColor": "Blue",
+          "colorSwatchUrl": "//0.42105263157894735,0.7115789473684211,0.10947368421052632,0.10947368421052632&",
+          "imageUrl": "//005121982?",
+          "isAvailable": true,
+          "skuId": "238956452"
+        }
+      ]
+    }
+    """);
+  }
 
   @Test void productIdShouldBeCorrect() {
     Product apiProduct = presentationService.formatForApi(testProduct);
-    assertEquals("id", apiProduct.getProductId());
+    assertEquals("5331675", apiProduct.getProductId());
   }
 
   @Test void productTitleShouldBeCorrect() {
     Product apiProduct = presentationService.formatForApi(testProduct);
-    assertEquals("title", apiProduct.getTitle());
+    assertEquals("Girls' Floral Print Jersey Dress, Blue", apiProduct.getTitle());
   }
 
-  @Test void productColorSwatches() {
-    fail("not impl'd yet.");
+  @Test void productColorSwatchesShouldBeCorrect() {
+    Product apiProduct = presentationService.formatForApi(testProduct);
+    List<ColorSwatch> colorSwatches = apiProduct.getColorSwatches();
+
+    assertEquals(1, colorSwatches.size());
+    ColorSwatch colorSwatch = colorSwatches.head();
+
+    assertEquals("Sky blue", colorSwatch.getColor());
+    assertEquals("0000FF", colorSwatch.getRgbColor());
+    assertEquals("238956452", colorSwatch.getSkuId());
   }
 
   @Test void productNowPrice() {
