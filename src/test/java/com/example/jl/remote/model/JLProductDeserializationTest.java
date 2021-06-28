@@ -1,5 +1,6 @@
 package com.example.jl.remote.model;
 
+import com.example.jl.common.Price;
 import com.example.jl.common.PriceRange;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,7 @@ class JLProductDeserializationTest {
     assertAll(
         () -> assertEquals("5451564", simpleProduct.getProductId()),
         () -> assertEquals("Children's Daisy Print Lead In Jersey Dress, Red", simpleProduct.getTitle()),
-        () -> assertEquals("7.50", simpleProduct.getPrice().getNow().getValue().get()),
+        () -> assertEquals(Price.from("7.50"), simpleProduct.getPrice().getNow().getValue().getLeft()),
         () -> assertEquals("GBP", simpleProduct.getPrice().getCurrency())
     );
   }
@@ -65,8 +66,8 @@ class JLProductDeserializationTest {
     assertAll(
         () -> assertEquals("5285683", product.getProductId()),
         () -> assertEquals("Striped Jersey Dress, Navy/Multi", product.getTitle()),
-        () -> assertEquals("34.95", product.getPrice().getWas().getValue().get()),
-        () -> assertEquals(PriceRange.fromTo("14.95", "34.95"), product.getPrice().getNow().getValue().getLeft()),
+        () -> assertEquals(Price.from("34.95"), product.getPrice().getWas().getValue().getLeft()),
+        () -> assertEquals(PriceRange.fromTo("14.95", "34.95"), product.getPrice().getNow().getValue().get()),
         () -> assertEquals("GBP", product.getPrice().getCurrency())
     );
   }

@@ -97,6 +97,17 @@ public class Price implements Comparable<Price> {
     return format("%d.%02d", major, minor);
   }
 
+  public String toDisplayString() {
+    var needsTruncating = minor == 0 && major >= 10;
+
+    if (needsTruncating) {
+      return Integer.toString(major);
+    }
+    else {
+      return toString();
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

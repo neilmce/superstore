@@ -24,7 +24,17 @@ public abstract class ValueOrFromToDeserializer<T> extends StdDeserializer<T> {
       return fromTo(node.get("from").asText(), node.get("to").asText());
     }
     else {
-      return value(node.asText());
+      String text = node.asText();
+
+      // Some of these prices are returned as 'values' (as opposed to ranges)
+      // but they have blank values (empty strings).
+      // For example, a price could be was, then, now and the was or then could be blank.
+      if (text == null || text.isBlank()) {
+        return null;
+      }
+      else {
+        return value(text);
+      }
     }
   }
 

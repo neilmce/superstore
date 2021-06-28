@@ -1,5 +1,7 @@
 package com.example.jl.common;
 
+import io.vavr.Tuple2;
+
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -47,6 +49,10 @@ public class PriceRange implements Comparable<PriceRange> {
 
   @Override public String toString() {
     return format("%s..%s", from, to);
+  }
+
+  public Tuple2<String, String> toDisplayStrings() {
+    return new Tuple2<>(from.toDisplayString(), to.toDisplayString());
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.example.jl;
 
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
+import com.example.jl.remote.model.JLPrice;
 import com.example.jl.remote.model.JLProduct;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class ProductPresentationServiceTest {
-  private final ProductPresentationService presentationService = new ProductPresentationService(new RgbColorService());
+  private final ProductPresentationService presentationService =
+      new ProductPresentationService(new RgbColorService(), new CurrencyService());
 
   private final ObjectReader objectReader = new ObjectMapper()
                                                   .registerModule(new VavrModule())
@@ -77,8 +79,40 @@ class ProductPresentationServiceTest {
 
   @Test void productNowPrice() {
     Product apiProduct = presentationService.formatForApi(testProduct);
-
     assertEquals("£6.00", apiProduct.getNowPrice());
+  }
+
+  @Test void productNowPriceMoreThanTen() throws JsonProcessingException {
+    JLProduct jlProduct = objectReader.readValue(
+        """
+            {
+              "productId": "1234",
+              "type": "product",
+              "title": "Small dress",
+              "price": {
+                "was": "",
+                "then1": "",
+                "then2": "",
+                "now": "20.00",
+                "uom": "",
+                "currency": "USD"
+              },
+              "image": "//005121982?",
+              "colorSwatches": [
+                {
+                  "color": "Sky blue",
+                  "basicColor": "Blue",
+                  "colorSwatchUrl": "//0.42105263157894735,0.7115789473684211,0.10947368421052632,0.10947368421052632&",
+                  "imageUrl": "//005121982?",
+                  "isAvailable": true,
+                  "skuId": "238956452"
+                }
+              ]
+            }
+            """
+    );
+    String nowPrice = presentationService.formatNowPrice(jlProduct.getPrice());
+    assertEquals("$20", nowPrice);
   }
 
   @Test void productPriceLabel() {

@@ -1,5 +1,6 @@
 package com.example.jl.remote.model;
 
+import com.example.jl.common.Price;
 import com.example.jl.common.PriceRange;
 import com.example.jl.remote.serdes.FromToDeserializers.NowDeserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.Then1Deserializer;
@@ -55,59 +56,59 @@ public class JLPrice {
     return currency;
   }
 
-  public static class PriceRangeOrValue {
-    private final Either<PriceRange, String> value;
+  public static class ValueOrPriceRange {
+    private final Either<Price, PriceRange> value;
 
-    protected PriceRangeOrValue(Either<PriceRange, String> value) {
+    protected ValueOrPriceRange(Either<Price, PriceRange> value) {
       this.value = value;
     }
 
-    public Either<PriceRange, String> getValue() {
+    public Either<Price, PriceRange> getValue() {
       return value;
     }
   }
 
   @JsonDeserialize(using = NowDeserializer.class)
-  public static class Now extends PriceRangeOrValue {
+  public static class Now extends ValueOrPriceRange {
     public Now(String value) {
-      super(Either.right(value));
+      super(Either.left(Price.from(value)));
     }
 
     public Now(String from, String to) {
-      super(Either.left(PriceRange.fromTo(from, to)));
+      super(Either.right(PriceRange.fromTo(from, to)));
     }
   }
 
   @JsonDeserialize(using = WasDeserializer.class)
-  public static class Was extends PriceRangeOrValue {
+  public static class Was extends ValueOrPriceRange {
     public Was(String value) {
-      super(Either.right(value));
+      super(Either.left(Price.from(value)));
     }
 
     public Was(String from, String to) {
-      super(Either.left(PriceRange.fromTo(from, to)));
+      super(Either.right(PriceRange.fromTo(from, to)));
     }
   }
 
   @JsonDeserialize(using = Then1Deserializer.class)
-  public static class Then1 extends PriceRangeOrValue {
+  public static class Then1 extends ValueOrPriceRange {
     public Then1(String value) {
-      super(Either.right(value));
+      super(Either.left(Price.from(value)));
     }
 
     public Then1(String from, String to) {
-      super(Either.left(PriceRange.fromTo(from, to)));
+      super(Either.right(PriceRange.fromTo(from, to)));
     }
   }
 
   @JsonDeserialize(using = Then2Deserializer.class)
-  public static class Then2 extends PriceRangeOrValue {
+  public static class Then2 extends ValueOrPriceRange {
     public Then2(String value) {
-      super(Either.right(value));
+      super(Either.left(Price.from(value)));
     }
 
     public Then2(String from, String to) {
-      super(Either.left(PriceRange.fromTo(from, to)));
+      super(Either.right(PriceRange.fromTo(from, to)));
     }
   }
 }

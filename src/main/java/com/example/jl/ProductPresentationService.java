@@ -2,9 +2,12 @@ package com.example.jl;
 
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
+import com.example.jl.common.Price;
+import com.example.jl.common.PriceRange;
 import com.example.jl.remote.model.JLColorSwatch;
 import com.example.jl.remote.model.JLPrice;
 import com.example.jl.remote.model.JLProduct;
+import io.vavr.control.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +18,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductPresentationService {
   private final RgbColorService rgbColorService;
+  private final CurrencyService currencyService;
 
   @Autowired
-  public ProductPresentationService(RgbColorService rgbColorService) {
+  public ProductPresentationService(RgbColorService rgbColorService, CurrencyService currencyService) {
     this.rgbColorService = rgbColorService;
+    this.currencyService = currencyService;
   }
 
   public Product formatForApi(JLProduct jlProduct) {
@@ -35,6 +40,17 @@ public class ProductPresentationService {
   }
 
   String formatNowPrice(JLPrice jlPrice) {
-    return jlPrice.getNow().getValue().toString();
+    Either<Price, PriceRange> price = jlPrice.getNow().getValue();
+    var curr = jlPrice.getCurrency();
+    var symbol = currencyService.toSymbol(curr);
+
+    if (price.isLeft()) {
+      return symbol + price.getLeft().toDisplayString();
+    }
+    else {
+      var priceStrings = price.get().toDisplayStrings();
+      var priceStringsWithCurr =  priceStrings.map2(x -> symbol + x);
+      return priceStringsWithCurr._1() + " to " + priceStringsWithCurr._2();
+    }
   }
 }
