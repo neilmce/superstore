@@ -21,7 +21,7 @@ public class ApiController {
     this.priceReductionService = priceReductionService;
   }
 
-  @RequestMapping("/")
+  @RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
   public ResponseEntity<List<Product>> getReducedProducts(@RequestParam(required = false) String labelType) {
     LabelType lt = LabelType.fromProvidedValue(labelType);
     return ResponseEntity.ok(priceReductionService.getProducts(lt).asJava());
