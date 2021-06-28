@@ -76,7 +76,9 @@ class ProductPresentationServiceTest {
   }
 
   @Test void productNowPrice() {
-    fail("not impl'd yet.");
+    Product apiProduct = presentationService.formatForApi(testProduct);
+
+    assertEquals("£6.00", apiProduct.getNowPrice());
   }
 
   @Test void productPriceLabel() {

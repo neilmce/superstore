@@ -9,6 +9,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PriceReductionService {
+
+  public enum LabelType {
+    SHOW_WAS_NOW("ShowWasNow"),
+    SHOW_WAS_THEN_NOW("ShowWasThenNow"),
+    SHOW_PERC_DISCOUNT("ShowPercDiscount");
+
+    private final String value;
+
+    LabelType(String value) {
+      this.value = value;
+    }
+  }
+
   private final RemoteCatalogService remoteCatalogService;
   private final ProductPresentationService productPresentationService;
 
@@ -19,6 +32,10 @@ public class PriceReductionService {
   }
 
   public List<Product> getProducts() {
+    return getProducts(LabelType.SHOW_WAS_NOW);
+  }
+
+  public List<Product> getProducts(LabelType labelType) {
     JLQueryResponse rsp = remoteCatalogService.query();
     return rsp.getProducts().map(productPresentationService::formatForApi);
   }

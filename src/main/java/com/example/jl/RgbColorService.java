@@ -155,6 +155,7 @@ public class RgbColorService {
     nameToHex.put("whitesmoke", "F5F5F5");
     nameToHex.put("white", "FFFFFF");
   }
+
   public String toRgb(String basicColor) {
     return nameToHex.getOrDefault(basicColor.toLowerCase(), "");
   }

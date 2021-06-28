@@ -6,6 +6,7 @@ public class PriceRange {
   private final String from;
   private final String to;
 
+  // TODO Introduce numerical price (comparable) and make this range numerical too.?
   public PriceRange(String from,
                     String to) {
     this.from = from;

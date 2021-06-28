@@ -3,6 +3,7 @@ package com.example.jl;
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
 import com.example.jl.remote.model.JLColorSwatch;
+import com.example.jl.remote.model.JLPrice;
 import com.example.jl.remote.model.JLProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,16 @@ public class ProductPresentationService {
     return new Product(jlProduct.getProductId(),
                        jlProduct.getTitle(),
                        jlProduct.getColorSwatches().map(this::formatColorSwatch),
-                       null,
+                       formatNowPrice(jlProduct.getPrice()),
                        null);
   }
 
-  private ColorSwatch formatColorSwatch(JLColorSwatch jlColorSwatch) {
+  ColorSwatch formatColorSwatch(JLColorSwatch jlColorSwatch) {
     final String rgb = rgbColorService.toRgb(jlColorSwatch.getBasicColor());
     return new ColorSwatch(jlColorSwatch.getColor(), rgb, jlColorSwatch.getSkuId());
+  }
+
+  String formatNowPrice(JLPrice jlPrice) {
+    return jlPrice.getNow().getValue().toString();
   }
 }
