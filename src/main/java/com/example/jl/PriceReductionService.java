@@ -7,6 +7,8 @@ import io.vavr.collection.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 public class PriceReductionService {
 
@@ -15,10 +17,21 @@ public class PriceReductionService {
     SHOW_WAS_THEN_NOW("ShowWasThenNow"),
     SHOW_PERC_DISCOUNT("ShowPercDiscount");
 
-    private final String value;
+    private final String displayName;
 
-    LabelType(String value) {
-      this.value = value;
+    LabelType(String displayName) {
+      this.displayName = displayName;
+    }
+
+    public static LabelType fromProvidedValue(String labelType) {
+      return Arrays.stream(LabelType.values())
+          .filter(x -> x.displayName.equals(labelType))
+          .findFirst()
+          .orElse(SHOW_WAS_NOW);
+    }
+
+    public String getDisplayName() {
+      return displayName;
     }
   }
 
@@ -37,6 +50,6 @@ public class PriceReductionService {
 
   public List<Product> getProducts(LabelType labelType) {
     JLQueryResponse rsp = remoteCatalogService.query();
-    return rsp.getProducts().map(productPresentationService::formatForApi);
+    return rsp.getProducts().map(p -> productPresentationService.formatForApi(p, labelType));
   }
 }

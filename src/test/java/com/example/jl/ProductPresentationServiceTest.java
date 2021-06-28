@@ -1,16 +1,17 @@
 package com.example.jl;
 
+import com.example.jl.PriceReductionService.LabelType;
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
-import com.example.jl.remote.model.JLPrice;
 import com.example.jl.remote.model.JLProduct;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import io.vavr.collection.List;
 import io.vavr.jackson.datatype.VavrModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -56,21 +57,21 @@ class ProductPresentationServiceTest {
   }
 
   @Test void productIdShouldBeCorrect() {
-    Product apiProduct = presentationService.formatForApi(testProduct);
+    Product apiProduct = presentationService.formatForApi(testProduct, LabelType.SHOW_WAS_NOW);
     assertEquals("5331675", apiProduct.getProductId());
   }
 
   @Test void productTitleShouldBeCorrect() {
-    Product apiProduct = presentationService.formatForApi(testProduct);
+    Product apiProduct = presentationService.formatForApi(testProduct, LabelType.SHOW_WAS_NOW);
     assertEquals("Girls' Floral Print Jersey Dress, Blue", apiProduct.getTitle());
   }
 
   @Test void productColorSwatchesShouldBeCorrect() {
-    Product apiProduct = presentationService.formatForApi(testProduct);
+    Product apiProduct = presentationService.formatForApi(testProduct, LabelType.SHOW_WAS_NOW);
     List<ColorSwatch> colorSwatches = apiProduct.getColorSwatches();
 
     assertEquals(1, colorSwatches.size());
-    ColorSwatch colorSwatch = colorSwatches.head();
+    ColorSwatch colorSwatch = colorSwatches.get(0);
 
     assertEquals("Sky blue", colorSwatch.getColor());
     assertEquals("0000FF", colorSwatch.getRgbColor());
@@ -78,11 +79,11 @@ class ProductPresentationServiceTest {
   }
 
   @Test void productNowPrice() {
-    Product apiProduct = presentationService.formatForApi(testProduct);
+    Product apiProduct = presentationService.formatForApi(testProduct, LabelType.SHOW_WAS_NOW);
     assertEquals("£6.00", apiProduct.getNowPrice());
   }
 
-  @Test void productNowPriceMoreThanTen() throws JsonProcessingException {
+  @Test void productNowPriceShouldBeTruncatedIfMoreThanTenPounds() throws JsonProcessingException {
     JLProduct jlProduct = objectReader.readValue(
         """
             {
@@ -111,7 +112,8 @@ class ProductPresentationServiceTest {
             }
             """
     );
-    String nowPrice = presentationService.formatNowPrice(jlProduct.getPrice());
+    var price = jlProduct.getPrice();
+    String nowPrice = presentationService.formatPrice(price.getCurrency(), price.getNow().getValue());
     assertEquals("$20", nowPrice);
   }
 

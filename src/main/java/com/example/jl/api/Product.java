@@ -1,6 +1,6 @@
 package com.example.jl.api;
 
-import io.vavr.collection.List;
+import java.util.List;
 
 public class Product {
   private final String            productId;
