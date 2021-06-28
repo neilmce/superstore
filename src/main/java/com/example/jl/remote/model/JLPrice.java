@@ -1,5 +1,6 @@
 package com.example.jl.remote.model;
 
+import com.example.jl.common.PriceRange;
 import com.example.jl.remote.serdes.FromToDeserializers.NowDeserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.Then1Deserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.Then2Deserializer;
@@ -73,7 +74,7 @@ public class JLPrice {
     }
 
     public Now(String from, String to) {
-      super(Either.left(new PriceRange(from, to)));
+      super(Either.left(PriceRange.fromTo(from, to)));
     }
   }
 
@@ -84,7 +85,7 @@ public class JLPrice {
     }
 
     public Was(String from, String to) {
-      super(Either.left(new PriceRange(from, to)));
+      super(Either.left(PriceRange.fromTo(from, to)));
     }
   }
 
@@ -95,7 +96,7 @@ public class JLPrice {
     }
 
     public Then1(String from, String to) {
-      super(Either.left(new PriceRange(from, to)));
+      super(Either.left(PriceRange.fromTo(from, to)));
     }
   }
 
@@ -106,7 +107,7 @@ public class JLPrice {
     }
 
     public Then2(String from, String to) {
-      super(Either.left(new PriceRange(from, to)));
+      super(Either.left(PriceRange.fromTo(from, to)));
     }
   }
 }

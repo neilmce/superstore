@@ -1,5 +1,6 @@
 package com.example.jl.remote.model;
 
+import com.example.jl.common.PriceRange;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
