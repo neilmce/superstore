@@ -6,29 +6,28 @@ import com.example.jl.remote.serdes.FromToDeserializers.NowDeserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.Then1Deserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.Then2Deserializer;
 import com.example.jl.remote.serdes.FromToDeserializers.WasDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.vavr.control.Either;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JLPrice {
   private final Was was;
   private final Then1 then1;
   private final Then2 then2;
   private final Now now;
-  private final String uom;
   private final String currency;
 
   public JLPrice(@JsonProperty("was")      Was was,
                  @JsonProperty("then1")    Then1 then1,
                  @JsonProperty("then2")    Then2 then2,
                  @JsonProperty("now")      Now now,
-                 @JsonProperty("uom")      String uom,
                  @JsonProperty("currency") String currency) {
     this.was = was;
     this.then1 = then1;
     this.then2 = then2;
     this.now = now;
-    this.uom = uom;
     this.currency = currency;
   }
 
@@ -46,10 +45,6 @@ public class JLPrice {
 
   public Now getNow() {
     return now;
-  }
-
-  public String getUom() {
-    return uom;
   }
 
   public String getCurrency() {

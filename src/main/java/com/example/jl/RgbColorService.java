@@ -1,12 +1,7 @@
 package com.example.jl;
 
-import com.example.jl.api.ColorSwatch;
-import com.example.jl.api.Product;
-import com.example.jl.remote.model.JLColorSwatch;
-import com.example.jl.remote.model.JLProduct;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 

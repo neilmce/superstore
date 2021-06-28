@@ -7,8 +7,6 @@ import com.example.jl.common.Price;
 import com.example.jl.common.PriceRange;
 import com.example.jl.remote.model.JLColorSwatch;
 import com.example.jl.remote.model.JLPrice;
-import com.example.jl.remote.model.JLPrice.Now;
-import com.example.jl.remote.model.JLPrice.Was;
 import com.example.jl.remote.model.JLProduct;
 import io.vavr.control.Either;
 import org.slf4j.Logger;

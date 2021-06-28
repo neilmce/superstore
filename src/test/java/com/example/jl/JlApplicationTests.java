@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class JlApplicationTests {
@@ -19,12 +18,11 @@ class JlApplicationTests {
   void contextLoads() {
     List<Product> products = priceReductionService.getProducts();
 
-    products.forEach(p -> {
-      assertAll(
+    products.forEach(p ->
+        assertAll(
           () -> assertFalse(p.getProductId().isBlank()),
           () -> assertFalse(p.getTitle().isBlank())
-      );
-    });
+        ));
     System.out.println(products);
   }
 
