@@ -49,11 +49,11 @@ public class PriceReductionService {
     this.productPresentationService = productPresentationService;
   }
 
-  public List<Product> getProducts(Predicate<JLProduct> filter) {
-    return getProducts(LabelType.SHOW_WAS_NOW, filter);
+  public List<Product> getProducts(Predicate<JLProduct> filter, PriceReductionComparator comparator) {
+    return getProducts(LabelType.SHOW_WAS_NOW, filter, comparator);
   }
 
-  public List<Product> getProducts(LabelType labelType, Predicate<JLProduct> filter) {
+  public List<Product> getProducts(LabelType labelType, Predicate<JLProduct> filter, PriceReductionComparator comparator) {
     LOGGER.info("Getting products for labelType:{}", labelType);
 
     JLQueryResponse rsp = remoteCatalogService.query();
@@ -61,9 +61,11 @@ public class PriceReductionService {
 
     List<JLProduct> reducedProducts = rsp.getProducts().filter(filter);
 
-    LOGGER.info("Including {} reduced products", reducedProducts.size());
+    var sortedReducedProducts = reducedProducts.sorted(comparator).reverse();
 
-    return reducedProducts
+    LOGGER.info("Including {} reduced products", sortedReducedProducts.size());
+
+    return sortedReducedProducts
               .map(p -> productPresentationService.formatForApi(p, labelType));
   }
 }

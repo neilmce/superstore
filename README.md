@@ -14,7 +14,37 @@ Design Overview
   This class exposes a single HTTP endpoint `/products` which returns UTF-8 encoded JSON response bodies
   containing matching products from the remote catalogue.
   
-  An example response: TODO
+  An example response:
+```json
+[
+  {
+    "productId": "5517969",
+    "title": "Hobbs Seasalter Ditsy Print Dress, Navy/Multi",
+    "colorSwatches": [
+      {
+        "color": "",
+        "rgbColor": "0000FF",
+        "skuId": "239891777"
+      }
+    ],
+    "nowPrice": "£49",
+    "priceLabel": "51% off - now £49"
+  },
+  {
+    "productId": "5401607",
+    "title": "Phase Eight Mel Abstract Ruched Dress, Cobalt/White",
+    "colorSwatches": [
+      {
+        "color": "",
+        "rgbColor": "",
+        "skuId": "239877892"
+      }
+    ],
+    "nowPrice": "£44.50",
+    "priceLabel": "50% off - now £44.50"
+  }
+]
+```
   
   The `/products` endpoint accepts an optional query parameter, `labelType`, which tailors the
   product price labels as follows:

@@ -120,4 +120,13 @@ public class Price implements Comparable<Price> {
   public int hashCode() {
     return Objects.hash(major, minor);
   }
+
+  public Price difference(Price that) {
+    var thisPriceInPennies = this.major * 100 + this.minor;
+    var thatPriceInPennies = that.major * 100 + that.minor;
+
+    var differenceInPennies = Math.abs(thisPriceInPennies - thatPriceInPennies);
+
+    return Price.of(differenceInPennies / 100, differenceInPennies % 100);
+  }
 }

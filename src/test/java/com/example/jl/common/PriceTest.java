@@ -13,6 +13,10 @@ class PriceTest {
   private final Price p2 = Price.of(6, 30);
   private final Price p3 = Price.of(6, 99);
 
+  @Test void priceDifference() {
+    assertEquals(Price.of(0, 69), p1.difference(p3));
+  }
+
   @Test void equalsAndHashCode() {
 
     assertEquals(p1, p2);

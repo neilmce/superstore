@@ -1,5 +1,6 @@
 package com.example.jl.controllers;
 
+import com.example.jl.PriceReductionComparator;
 import com.example.jl.PriceReductionService;
 import com.example.jl.PriceReductionService.LabelType;
 import com.example.jl.ReducedProductFilter;
@@ -22,9 +23,14 @@ public class ApiController {
     this.priceReductionService = priceReductionService;
   }
 
-  @RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
+  @RequestMapping(value = "/products", produces = "application/json;charset=UTF-8")
   public ResponseEntity<List<Product>> getReducedProducts(@RequestParam(required = false) String labelType) {
     var lt = LabelType.fromProvidedValue(labelType);
-    return ResponseEntity.ok(priceReductionService.getProducts(lt, new ReducedProductFilter()).asJava());
+    return ResponseEntity.ok(
+        priceReductionService.getProducts(lt,
+                                          new ReducedProductFilter(),
+                                          new PriceReductionComparator()
+        ).asJava()
+    );
   }
 }

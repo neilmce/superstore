@@ -112,7 +112,7 @@ public class ProductPresentationService {
         float nowF = nowPrice.getMajor() + (nowPrice.getMinor() / 100F);
         var percentageReduction = (100 * (wasF - nowF) / wasF);
 
-        return format("%.0f%% off - now %s", percentageReduction, formatPrice(price.getCurrency(), was.getValue()));
+        return format("%.0f%% off - now %s", percentageReduction, formatPrice(price.getCurrency(), now.getValue()));
       }
     }
     return formatWasNow(price);
