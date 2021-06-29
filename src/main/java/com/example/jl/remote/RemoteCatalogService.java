@@ -1,30 +1,51 @@
 package com.example.jl.remote;
 
 import com.example.jl.remote.model.JLQueryResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import io.vavr.jackson.datatype.VavrModule;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 
 @Service
 public class RemoteCatalogService {
+  private final String remoteUrl = "https://api.johnlewis.com/search/api/rest/v2/catalog/products/search/keyword?q=dresses&key=AIzaSyDD_6O5gUgC4tRW5f9kxC0_76XRC8W7_mI";
 
-  // TODO Make this class make a remote call.
   private final ObjectReader objectReader = new ObjectMapper().registerModule(new VavrModule()).reader().forType(JLQueryResponse.class);
 
   public JLQueryResponse query() {
-
-    final JLQueryResponse rsp;
-
-    try (InputStream in = this.getClass().getResourceAsStream("/jl-response.json")) {
-      rsp = objectReader.readValue(in);
-    } catch (IOException e) {
-      throw new IllegalArgumentException(e);
+    var httpRequest = HttpRequest.newBuilder()
+                                   .GET()
+                                   .uri(URI.create(remoteUrl))
+                                   .timeout(Duration.ofMinutes(1))
+                                   .header("Content-Type", "application/json")
+                                 .build();
+    final HttpResponse<String> httpRsp;
+    try {
+      httpRsp = HttpClient.newHttpClient().send(httpRequest, BodyHandlers.ofString());
+    } catch (IOException | InterruptedException e) {
+      throw new RemoteCommsException("Remote call failed.", e);
     }
 
-    return rsp;
+    if (httpRsp.statusCode() != 200) {
+      throw new RemoteCommsException("Remote call failed. Status code: " + httpRsp.statusCode());
+    }
+
+    JLQueryResponse result = null;
+    try {
+      result = objectReader.readValue(httpRsp.body());
+    } catch (JsonProcessingException e) {
+      throw new RemoteCommsException("Failed to process response from remote server.", e);
+    }
+
+    return result;
   }
 }
