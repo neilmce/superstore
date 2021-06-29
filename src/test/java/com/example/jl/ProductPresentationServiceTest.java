@@ -1,6 +1,6 @@
 package com.example.jl;
 
-import com.example.jl.PriceReductionService.LabelType;
+import com.example.jl.ProductService.LabelType;
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
 import com.example.jl.remote.model.JLProduct;
@@ -115,9 +115,5 @@ class ProductPresentationServiceTest {
     var price = jlProduct.getPrice();
     String nowPrice = presentationService.formatPrice(price.getCurrency(), price.getNow().getValue());
     assertEquals("$20", nowPrice);
-  }
-
-  @Test void productPriceLabel() {
-    fail("not impl'd yet.");
   }
 }

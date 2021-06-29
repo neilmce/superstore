@@ -1,6 +1,6 @@
 package com.example.jl;
 
-import com.example.jl.PriceReductionService.LabelType;
+import com.example.jl.ProductService.LabelType;
 import com.example.jl.api.ColorSwatch;
 import com.example.jl.api.Product;
 import com.example.jl.common.Price;

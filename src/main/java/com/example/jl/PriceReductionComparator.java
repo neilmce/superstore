@@ -6,6 +6,13 @@ import io.vavr.control.Either;
 
 import java.util.Comparator;
 
+/**
+ * A comparator between 2 products that sorts them according to the absolute size of their
+ * price reduction. If either or both of the products do not have a reduction (because they
+ * have no 'was' price) or if either or both of the products have a price <em>range</em>
+ * rather than a fixed price, then the comparison operation is not clearly defined
+ * by current requirements.
+ */
 public class PriceReductionComparator implements Comparator<JLProduct> {
 
   @Override public int compare(JLProduct left, JLProduct right) {

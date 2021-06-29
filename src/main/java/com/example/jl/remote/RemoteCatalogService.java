@@ -15,16 +15,20 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
+/** This service makes HTTP GET calls to the remote product catalog. */
 @Service
 public class RemoteCatalogService {
-  private final String remoteUrl = "https://api.johnlewis.com/search/api/rest/v2/catalog/products/search/keyword?q=dresses&key=AIzaSyDD_6O5gUgC4tRW5f9kxC0_76XRC8W7_mI";
+  private static final String REMOTE_URL = "https://api.johnlewis.com/search/api/rest/v2/catalog/products/search/keyword?q=dresses&key=AIzaSyDD_6O5gUgC4tRW5f9kxC0_76XRC8W7_mI";
 
-  private final ObjectReader objectReader = new ObjectMapper().registerModule(new VavrModule()).reader().forType(JLQueryResponse.class);
+  private final ObjectReader objectReader = new ObjectMapper()
+      .registerModule(new VavrModule())
+      .reader()
+      .forType(JLQueryResponse.class);
 
   public JLQueryResponse query() {
     var httpRequest = HttpRequest.newBuilder()
                                    .GET()
-                                   .uri(URI.create(remoteUrl))
+                                   .uri(URI.create(REMOTE_URL))
                                    .timeout(Duration.ofMinutes(1))
                                    .header("Content-Type", "application/json")
                                  .build();

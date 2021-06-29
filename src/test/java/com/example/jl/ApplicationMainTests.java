@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 class ApplicationMainTests {
 
-  @Autowired private PriceReductionService priceReductionService;
+  @Autowired private ProductService productService;
 
   @Test
   void contextLoads() {
-    List<Product> products = priceReductionService.getProducts(new ReducedProductFilter(), new PriceReductionComparator());
+    List<Product> products = productService.getProducts(new ReducedProductFilter(), new PriceReductionComparator());
 
     products.forEach(p ->
         assertAll(

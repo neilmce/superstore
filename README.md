@@ -52,7 +52,7 @@ Design Overview
   * `labelType` = `ShowWasThenNow` "Was £20, then £15, now £9.99"
   * `labelType` = `ShowPercDiscount` "50% off - now £9.99"
 
-* The data are requested by the `PriceReductionService`, which uses `RemoteCatalogService` to make
+* The data are requested by the `ProductService`, which uses `RemoteCatalogService` to make
   the HTTP calls.
 
 * The data are rendered into JSON by Spring's normal Jackson mapper object with some pre-processing
@@ -77,3 +77,24 @@ Immutable collections
 
 The application internally uses `io.vavr` collection classes, which support immutable data and built-in
 functional programming methods such as `map`, `filter` etc.
+This was done because vavr has better support for this style of programming than Java's own stream classes.
+
+Prices vs. Price ranges
+=======================
+There is an interesting quirk at the centre of this application.
+The application aims to return products that have had their prices reduced, sorted by the magnitude
+of that price reduction.
+For many products this is easy to understand: they have a 'was' price and a 'now' price with the latter
+being lower. Some products have intermediate prices but that doesn't add complexity.
+The unusual case is a product which has a price _range_. For these products it is possible to detect
+unambiguous price reductions e.g. if the 'now' price range has limits both of which are lower
+than those of the 'was' range. So I have included these products in the response.
+But for these products the absolute value of the price reduction, price.was - price.now is not clear.
+Therefore it's unclear where these prices would appear in a list sorted by reduction magnitude.
+I have arbitrarily sorted them low in that list.
+
+To run
+======
+Launch the spring boot application in the usual way and then point your browser at e.g.
+`http://localhost:8080/products?labelType=WasThenNow` (The query param is optional.
+For allowed values, see above.)

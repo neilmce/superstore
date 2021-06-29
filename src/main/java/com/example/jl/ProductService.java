@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 @Service
-public class PriceReductionService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(PriceReductionService.class);
+public class ProductService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
 
   public enum LabelType {
     SHOW_WAS_NOW("ShowWasNow"),
@@ -44,7 +44,7 @@ public class PriceReductionService {
   private final ProductPresentationService productPresentationService;
 
   @Autowired
-  public PriceReductionService(RemoteCatalogService remoteCatalogService, ProductPresentationService productPresentationService) {
+  public ProductService(RemoteCatalogService remoteCatalogService, ProductPresentationService productPresentationService) {
     this.remoteCatalogService = remoteCatalogService;
     this.productPresentationService = productPresentationService;
   }
