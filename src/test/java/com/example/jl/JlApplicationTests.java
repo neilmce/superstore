@@ -16,7 +16,7 @@ class JlApplicationTests {
 
   @Test
   void contextLoads() {
-    List<Product> products = priceReductionService.getProducts();
+    List<Product> products = priceReductionService.getProducts(new ReducedProductFilter());
 
     products.forEach(p ->
         assertAll(

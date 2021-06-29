@@ -2,6 +2,7 @@ package com.example.jl.controllers;
 
 import com.example.jl.PriceReductionService;
 import com.example.jl.PriceReductionService.LabelType;
+import com.example.jl.ReducedProductFilter;
 import com.example.jl.api.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ApiController {
 
   @RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
   public ResponseEntity<List<Product>> getReducedProducts(@RequestParam(required = false) String labelType) {
-    LabelType lt = LabelType.fromProvidedValue(labelType);
-    return ResponseEntity.ok(priceReductionService.getProducts(lt).asJava());
+    var lt = LabelType.fromProvidedValue(labelType);
+    return ResponseEntity.ok(priceReductionService.getProducts(lt, new ReducedProductFilter()).asJava());
   }
 }

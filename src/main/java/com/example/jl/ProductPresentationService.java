@@ -22,7 +22,7 @@ import static java.lang.String.format;
  */
 @Service
 public class ProductPresentationService {
-  private final static Logger LOGGER = LoggerFactory.getLogger(ProductPresentationService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductPresentationService.class);
 
   private final RgbColorService rgbColorService;
   private final CurrencyService currencyService;
@@ -104,8 +104,8 @@ public class ProductPresentationService {
 
     boolean wasAndNowBothPrices = was != null && now != null && was.getValue().isLeft() && now.getValue().isLeft();
     if (wasAndNowBothPrices) {
-      Price wasPrice = price.getWas().getValue().getLeft();
-      Price nowPrice = price.getNow().getValue().getLeft();
+      var wasPrice = price.getWas().getValue().getLeft();
+      var nowPrice = price.getNow().getValue().getLeft();
 
       if (wasPrice.isGreaterThan(nowPrice)) {
         float wasF = wasPrice.getMajor() + (wasPrice.getMinor() / 100F);
